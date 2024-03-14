@@ -1,0 +1,19 @@
+
+lower_cutoff = 0.2;
+upper_cutoff = 0.23;
+tap_minimum = 100;
+tap_maximum = 500;
+tap_quantity = 300;
+
+cutoff_amp = db2mag(-80);
+%taps = fir1(tap_quantity, cutoff);
+taps = firpm(tap_quantity, [0 lower_cutoff upper_cutoff 1], [1 1 0 0]);
+%for tap_quantity = tap_minimum:tap_maximum
+%    taps = cfirpm(tap_quantity,[-1 -0.23 -0.2 0.2 0.23 1],@lowpass);
+%end
+freqz(taps,1,512)
+
+function x_q = quantize_tap(x, bits)
+    min_val = 2^(
+    x_q = round()
+end
