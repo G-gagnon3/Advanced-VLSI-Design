@@ -53,6 +53,10 @@ xlabel('Frequency (rad/s)');
 ylabel('Phase');
 legend('Unquantized','Quantized 16', 'Quantized 8', 'Quantized 4','Location',"southwest");
 
+q_taps16_json = jsonencode(q_taps16);
+fileID = fopen("test.json",'w');
+fprintf(fileID,q_taps16_json);
+
 function [x_q, dq] = quantize_taps(x, bits)
     % Base values
     num_q_vals = 2^(bits);

@@ -14,6 +14,7 @@ def build_fir(taps):
     FIR.insert_block(make_taps(taps))
     ## Build history block
     FIR.insert_block(make_history_buffer(len(taps)))
+    FIR.insert_block(make_output_ffs(8))
 
 
     return FIR
@@ -25,6 +26,7 @@ def make_common_logic(num_taps):
     lines.append(f"logic [{num_taps*bits-1}:0] value_grid;")
     lines.append(f"logic [{bits-1}:0] cur_val_q;")
     lines.append(f"logic [{num_taps*bits-1}:0] tap_outputs;")
+    lines.append(f"logic [{bits-1}:0] val_out_buffer;")
     lines.append("assign value_grid = {history, cur_val_q};")
     lines.append("assign cur_val_q = val_in;")
     
@@ -37,6 +39,65 @@ def make_history_buffer(num_taps):
     lines = []
     reset_blk = if_block("!reset")
     clk_blk = else_block()
+
+    reset_blk.insert_lines([f"history = {{({(num_taps-1)*c_bits}){{1'b0}} }};"])
+    #clk_blk.insert_lines(["history = {(history << 16), cur_val_q};"])
+    clk_blk.insert_lines([f"history = (((history << {c_bits}) & {{{{{(num_taps-2)*c_bits}{{1'b1}}}}, {{{c_bits}{{1'b0}}}}}}) | cur_val_q);"])
+
+    hist_buff.insert_block(reset_blk)
+    hist_buff.insert_block(clk_blk)
+
+    return hist_buff
+
+def make_output_ffs(num_delays):
+    output_buff = Always_FF()
+    c_bits = 16
+    lines = []
+
+    lines.append(f"logic [{num_delays*c_bits-1}:0] val_out_buffer_int;")
+    output_buff.insert_lines(lines)
+
+    reset_blk = if_block("!reset")
+    clk_blk = else_block()
+
+    reset_blk.insert_lines([f"val_out_buffer_int = {{({(num_delays-1)*c_bits}){{1'b0}} }};"])
+    #clk_blk.insert_lines(["history = {(history << 16), cur_val_q};"])
+    clk_blk.insert_lines([f"val_out_buffer_int = (((val_out_buffer_int << {c_bits}) & {{{{{(num_delays-2)*c_bits}{{1'b1}}}}, {{{c_bits}{{1'b0}}}}}}) | val_out_buffer);"])
+    clk_blk.insert_lines([f"val_out = val_out_buffer_int[{num_delays*c_bits-1}:{num_delays*c_bits-c_bits}]"])
+
+    output_buff.insert_block(reset_blk)
+    output_buff.insert_block(clk_blk)
+
+    return output_buff
+
+def make_tap_buffer(num_taps):
+    tap_buff = Always_FF()
+    c_bits = 16
+
+    lines = []
+    reset_blk = if_block("!reset")
+    clk_blk = else_block()
+
+    c_bits = 16
+    # Do declarations
+    lines = []
+    ntaps = num_taps
+    tiers = math.ceil(math.log2(ntaps))
+    remaining_values = ntaps
+    lines.append(f"logic [{remaining_values*c_bits-1}:0] adder_tree_tier_{0}_in;")
+    for tier in range(tiers):
+        output_values = remaining_values//2 + remaining_values%2
+        lines.append(f"logic [{output_values*c_bits-1}:0] adder_tree_tier_{tier+1}_in;")
+        remaining_values = output_values
+    tap_block.insert_lines(lines)
+
+    remaining_values = ntaps
+    lines.append(f"logic [{remaining_values*c_bits-1}:0] adder_tree_tier_{0}_in;")
+    for tier in range(tiers):
+        output_values = remaining_values//2 + remaining_values%2
+        lines.append(f"logic [{output_values*c_bits-1}:0] adder_tree_tier_{tier+1}_in;")
+        remaining_values = output_values
+    
 
     reset_blk.insert_lines([f"history = {{({(num_taps-1)*c_bits}){{1'b0}} }};"])
     #clk_blk.insert_lines(["history = {(history << 16), cur_val_q};"])
