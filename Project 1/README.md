@@ -18,10 +18,13 @@ Alternatively, if you wanted it to optimize to reach the exact stopband attenuat
 cutoff_amp = db2mag(-80);
 ```
 
-After generation, I apply 3 quantizations (4, 8, and 16 bit) to the taps. Then, I de-quantize the taps and compare their responses on a multiplot. 
+After generation, I apply 3 quantizations (4, 8, and 16 bit) to the taps. Then, I de-quantize the taps and compare their responses on a multiplot. The quantization scheme is shown abstractly below:
+![Quantization scheme](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/133ecd3f3b568d6b900f83356e0fd876044f2b73/Project%201/Documentation/Figures/Quantization_process.png)
+
 
 ![Bode Plot of FIR](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/76f22ef9ad072d7fcbd95165112c038374cbfc75/Project%201/Documentation/Figures/Filter_Quantization.png)
 
+From the figure we see that the only quantization which stays below -80dB is the 16 bit variant. This is unfortunate as this incurs a significant hardware penalty.
 ## HLS Tool
 
 The HLS tool is relatively simple in nature. It was written in Python and uses a block structure like standard SystemVerilog. The methodology is that blocks are generated, built, collapsed, then placed into higher-level blocks. For example, lines are inserted into an if block which then gets inserted into a module block.
@@ -29,6 +32,12 @@ The HLS tool is relatively simple in nature. It was written in Python and uses a
 The functionality is limited only to what I needed for the FIR filter, but it certainly could be expanded to include more blocks, like case statements. 
 
 For the actual design of the filter, both 1 parallel designs use a setup where the input is delayed before being multiplied with a long adder tree. A systolic structure could have been used, but I did not feel that gave enough latitude on the design space exploration. For the parallel design, I had noticed that although the inputs could not be delayed in the same way that the 1-parallel designs could, they could be pipelined as long as they obeyed the same structure as if there were n taps (See included diagram). With this adjustment, it could again be delayed in the same way.
+![Direct FIR](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/133ecd3f3b568d6b900f83356e0fd876044f2b73/Project%201/Documentation/Figures/Direct_FIR.png)
+![Pipelined FIR](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/133ecd3f3b568d6b900f83356e0fd876044f2b73/Project%201/Documentation/Figures/Pipelined_FIR.png)
+![Parallel FIR](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/133ecd3f3b568d6b900f83356e0fd876044f2b73/Project%201/Documentation/Figures/Parallel_FIR.png)
+
+Additionally, with the updated structure of the parallel design, I was able to maintain the same history buffer (the pipeline of input values) with an update to how it was shifted as shown below.
+![History Buffer](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/133ecd3f3b568d6b900f83356e0fd876044f2b73/Project%201/Documentation/Figures/History_chain.png)
 
 ## Design Compiler
 
@@ -61,7 +70,10 @@ export PATH="$DC_HOME/bin:$PATH"
 ## Results
 
 ### Filter Quality
-For filter quantization, the loss in fidelity was severe when moving from a 
+For filter quantization, the loss in fidelity was severe when moving from a full precision to a lower precision. Better processes could have amended this, such as a multi-level filter, but in the case of a 1-tier FIR filter, it was necessary to use 16-bits for 400 taps.
+
+![Bode Plot of FIR](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/76f22ef9ad072d7fcbd95165112c038374cbfc75/Project%201/Documentation/Figures/Filter_Quantization.png)
+
 
 ### Hardware Implementation
 I cannot tell if it is Design Compiler optimizing the design well or FreePDK45 having limited timing information, but surprisingly the direct design had the greatest slack of all the designs. I am not entirely sure why, but that was the synthesis result. Also, unsurprisingly it was the smallest of the synthesized designs. All reports are included in the repo, but they are summarized below
