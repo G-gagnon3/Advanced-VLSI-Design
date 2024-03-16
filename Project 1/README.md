@@ -5,6 +5,8 @@ The goal of this project was to design and implement a 100+ tap low-pass FIR fil
 
 To allow for rapid development and flexibility, I decided to base this project around a custom-made high-level synthesis tool. With this tool, I could export a filter specification from Matlab and synthesize a SystemVerilog file which itself could then be synthesized in Design Compiler
 
+The final version of the FIR taps was selected to be a 400 tap 16-bit variant.
+
 ## Filter Generation
 
 To generate the filter, I make use of the "firpm" function included in Matlab as it includes the ability to specify a transition band and specific amplitudes for bands. I used the function as follows:
@@ -16,7 +18,9 @@ Alternatively, if you wanted it to optimize to reach the exact stopband attenuat
 cutoff_amp = db2mag(-80);
 ```
 
-After generation, I apply 3 quantizations (4, 8, and 16 bit) to the taps. Then, I de-quantize the taps and compare their responses on a multiplot.
+After generation, I apply 3 quantizations (4, 8, and 16 bit) to the taps. Then, I de-quantize the taps and compare their responses on a multiplot. 
+
+![Bode Plot of FIR](https://github.com/G-gagnon3/Advanced-VLSI-Design/blob/76f22ef9ad072d7fcbd95165112c038374cbfc75/Project%201/Documentation/Figures/Filter_Quantization.png)
 
 ## HLS Tool
 
