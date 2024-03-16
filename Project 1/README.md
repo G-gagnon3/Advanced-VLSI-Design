@@ -91,7 +91,7 @@ There were also many violators, but those all had tolerances below the significa
 
 ## Conclusion
 
-Overall, the project was a success. I was able to design and implement an FIR filter to the required specifications. I would have preferred to see a much better quantization of 4-Bits since many neural networks have been able to operate with that degree of precision. The generated designs were able to meet required constraints and were able to be optimized further.
+Overall, the project was hard to quantify as a complete success. I was able to design and implement an FIR filter to the required specifications, but I wasn't able to generalize the process as I had intended to. With the HLS structure selected, tracking down bugs was very difficult. Further, I would have preferred to see a much better quantization of 4-Bits since many neural networks have been able to operate with that degree of precision. That being said, I think the results of the project were pretty strong. I have the framework of an HLS tool which will be refined to achieve high quality results.
 
 ### Filter Design
 There is certainly a lot more which could be done to make the filter more efficient. I found that while a smaller tap count could not achieve a full 80 dB attenuation, they could get close. Further, these filters quantized very well. Additionally, the underlying optimizer is **quantization unaware** meaning that it fails to consider the effects of quantization error. An ideal aware optimizer would factor in the outside constraint and likely vastly improve the quantization. 
