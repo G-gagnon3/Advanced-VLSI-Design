@@ -1,0 +1,102 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : FIR
+Version: P-2019.03-SP4
+Date   : Fri Mar 15 22:18:57 2024
+****************************************
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+  Startpoint: history_reg[66]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: val_out[15]
+            (output port clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  history_reg[66]/CLK (DFFSR)              0.00       0.00 r
+  history_reg[66]/Q (DFFSR)                0.11       0.11 f
+  U28142/Y (INVX1)                         0.01       0.12 r
+  U42032/Y (INVX1)                         0.03       0.15 f
+  U23506/Y (INVX4)                         0.04       0.19 r
+  U80243/Y (XNOR2X1)                       0.06       0.25 r
+  U13640/Y (INVX4)                         0.03       0.28 f
+  U80188/Y (INVX1)                         0.01       0.29 r
+  U11523/Y (AND2X2)                        0.03       0.32 r
+  U11524/Y (INVX1)                         0.02       0.34 f
+  U10818/Y (AND2X2)                        0.03       0.37 f
+  U10819/Y (INVX1)                         0.00       0.37 r
+  U6230/Y (AND2X2)                         0.03       0.40 r
+  U11526/Y (INVX1)                         0.01       0.41 f
+  U8292/Y (AND2X2)                         0.03       0.45 f
+  U8293/Y (INVX1)                          0.01       0.46 r
+  U13765/Y (BUFX4)                         0.07       0.52 r
+  U20338/Y (INVX4)                         0.06       0.58 f
+  U44971/Y (OAI21X1)                       0.09       0.67 r
+  U37636/Y (INVX1)                         0.04       0.71 f
+  U46201/Y (OAI21X1)                       0.08       0.78 r
+  U27464/Y (INVX2)                         0.02       0.80 f
+  U47440/Y (OAI21X1)                       0.08       0.89 r
+  U26575/Y (INVX2)                         0.02       0.91 f
+  U48509/Y (OAI21X1)                       0.08       0.99 r
+  U26715/Y (INVX2)                         0.02       1.01 f
+  U50905/Y (OAI21X1)                       0.08       1.09 r
+  U34698/Y (INVX1)                         0.04       1.13 f
+  U51603/Y (OAI21X1)                       0.08       1.20 r
+  U25863/Y (INVX2)                         0.02       1.22 f
+  U55105/Y (OAI21X1)                       0.08       1.30 r
+  U25832/Y (INVX2)                         0.02       1.32 f
+  U55470/Y (OAI21X1)                       0.08       1.41 r
+  U25831/Y (INVX2)                         0.02       1.43 f
+  U57615/Y (OAI21X1)                       0.08       1.51 r
+  U25715/Y (INVX2)                         0.02       1.53 f
+  U60208/Y (OAI21X1)                       0.08       1.61 r
+  U19301/Y (INVX2)                         0.02       1.63 f
+  U19299/Y (AND2X1)                        0.03       1.66 f
+  U19300/Y (INVX1)                         0.00       1.67 r
+  U62232/Y (AOI22X1)                       0.02       1.69 f
+  U8821/Y (INVX1)                          0.01       1.70 r
+  U8822/Y (INVX1)                          0.02       1.72 f
+  U38090/Y (XOR2X1)                        0.05       1.77 r
+  U62234/YS (FAX1)                         0.09       1.86 f
+  U62235/Y (XOR2X1)                        0.05       1.91 r
+  U62236/YS (FAX1)                         0.09       2.00 f
+  U42265/Y (XOR2X1)                        0.04       2.05 r
+  U62237/Y (XOR2X1)                        0.06       2.11 r
+  U62238/YS (FAX1)                         0.10       2.20 r
+  U62266/YS (FAX1)                         0.11       2.31 r
+  U62322/YS (FAX1)                         0.10       2.42 r
+  U62328/YS (FAX1)                         0.09       2.51 f
+  U62329/YS (FAX1)                         0.09       2.59 r
+  U62330/YS (FAX1)                         0.09       2.68 f
+  U8949/Y (XOR2X1)                         0.04       2.72 r
+  U4617/Y (XNOR2X1)                        0.05       2.77 r
+  U68529/Y (XNOR2X1)                       0.05       2.82 r
+  U42291/Y (XNOR2X1)                       0.05       2.87 r
+  U69709/Y (XNOR2X1)                       0.03       2.90 f
+  U69723/Y (INVX1)                         0.00       2.90 r
+  U4024/Y (BUFX2)                          0.35       3.25 r
+  val_out[15] (out)                        0.00       3.25 r
+  data arrival time                                   3.25
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  output external delay                   -0.10       0.90
+  data required time                                  0.90
+  -----------------------------------------------------------
+  data required time                                  0.90
+  data arrival time                                  -3.25
+  -----------------------------------------------------------
+  slack (VIOLATED)                                   -2.35
+
+
+1

@@ -60,10 +60,10 @@ def make_output_ffs(num_delays):
     reset_blk = if_block("!reset")
     clk_blk = else_block()
 
-    reset_blk.insert_lines([f"val_out_buffer_int = {{({(num_delays-1)*c_bits}){{1'b0}} }};"])
+    reset_blk.insert_lines([f"val_out_buffer_int = {{({(num_delays)*c_bits+c_bits-1}){{1'b0}} }};"])
     #clk_blk.insert_lines(["history = {(history << 16), cur_val_q};"])
-    clk_blk.insert_lines([f"val_out_buffer_int = (((val_out_buffer_int << {c_bits}) & {{{{{(num_delays-2)*c_bits}{{1'b1}}}}, {{{c_bits}{{1'b0}}}}}}) | val_out_buffer);"])
-    clk_blk.insert_lines([f"val_out = val_out_buffer_int[{num_delays*c_bits-1}:{num_delays*c_bits-c_bits}]"])
+    clk_blk.insert_lines([f"val_out_buffer_int = (((val_out_buffer_int << {c_bits}) & {{{{{(num_delays-1)*c_bits}{{1'b1}}}}, {{{c_bits}{{1'b0}}}}}}) | val_out_buffer);"])
+    clk_blk.insert_lines([f"val_out = val_out_buffer_int[{num_delays*c_bits-1}:{num_delays*c_bits-c_bits}];"])
 
     output_buff.insert_block(reset_blk)
     output_buff.insert_block(clk_blk)
@@ -153,7 +153,7 @@ def make_taps(taps):
         if remaining_values % 2 == 1: # Extra value
             lines.append(f"adder_tree_tier_{tier+1}_in[{(output_values-1)*c_bits + c_bits -1}:{(output_values-1)*c_bits}] = adder_tree_tier_{tier}_in[{(output_values-1)*2*c_bits + c_bits -1}:{(output_values-1)*2*c_bits}];")
         remaining_values = output_values
-    lines.append(f"val_out = adder_tree_tier_{tiers}_in;")
+    lines.append(f"val_out_buffer = adder_tree_tier_{tiers}_in;")
     tap_block.insert_lines(lines)
 
     return tap_block

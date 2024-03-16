@@ -826,7 +826,7 @@ module FIR (input logic clk, reset, input logic [15:0] val_in, output logic [15:
     adder_tree_tier_8_in[15:0] = adder_tree_tier_7_in[15:0] + adder_tree_tier_7_in[31:16];
     adder_tree_tier_8_in[31:16] = adder_tree_tier_7_in[47:32] + adder_tree_tier_7_in[63:48];
     adder_tree_tier_9_in[15:0] = adder_tree_tier_8_in[15:0] + adder_tree_tier_8_in[31:16];
-    val_out = adder_tree_tier_9_in;
+    val_out_buffer = adder_tree_tier_9_in;
   end
   always_ff @(posedge clk or negedge reset) begin
     if (!reset) begin
@@ -839,11 +839,11 @@ module FIR (input logic clk, reset, input logic [15:0] val_in, output logic [15:
   always_ff @(posedge clk or negedge reset) begin
     logic [127:0] val_out_buffer_int;
     if (!reset) begin
-      val_out_buffer_int = {(112){1'b0} };
+      val_out_buffer_int = {(143){1'b0} };
     end
     else begin
-      val_out_buffer_int = (((val_out_buffer_int << 16) & {{96{1'b1}}, {16{1'b0}}}) | val_out_buffer);
-      val_out = val_out_buffer_int[127:112]
+      val_out_buffer_int = (((val_out_buffer_int << 16) & {{112{1'b1}}, {16{1'b0}}}) | val_out_buffer);
+      val_out = val_out_buffer_int[127:112];
     end
   end
 endmodule

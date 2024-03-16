@@ -13,7 +13,7 @@ taps = firpm(tap_quantity, [0 lower_cutoff upper_cutoff 1], [1 1 0 0]);
 %end
 
 [h{1},w{1}] = freqz(taps,1,512);
-freqz(taps,1,512);
+%freqz(taps,1,512);
 
 [q_taps16, dq16] = quantize_taps(taps, 16);
 
@@ -30,7 +30,7 @@ dq_taps4 = q_taps4*dq4(1) + dq4(2);
 [h{4},w{4}] = freqz(dq_taps4,1,512);
 
 
-figure()
+%figure()
 subplot(2,1,1)
 for k = 1:4
     semilogy(w{k}/pi,abs(h{k}))
